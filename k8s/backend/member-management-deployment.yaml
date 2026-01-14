@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: member-management
+  namespace: member-management
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: member-management
+  template:
+    metadata:
+      labels:
+        app: member-management
+    spec:
+      containers:
+        - name: member-management
+          image: haririshnaerinhipuzha/member-management:1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            # Database host = postgres Service name
+            - name: DB_HOST
+              value: postgres
+            - name: DB_NAME
+              value: mydb
+
+            # From Secret
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: member-secret
+                  key: DB_USERNAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: member-secret
+                  key: DB_PASSWORD
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: member-secret
+                  key: JWT_SECRET
+            - name: JWT_EXPIRATION_MS
+              valueFrom:
+                secretKeyRef:
+                  name: member-secret
+                  key: JWT_EXPIRATION_MS

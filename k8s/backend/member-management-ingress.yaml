@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: member-management-ingress
+  namespace: member-management
+spec:
+  rules:
+    - host: member-management.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: member-management
+                port:
+                  number: 80
